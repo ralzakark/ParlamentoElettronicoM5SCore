@@ -1174,8 +1174,9 @@ COMMENT ON INDEX "notification_sent_singleton_idx" IS 'This index ensures that "
 
 CREATE TABLE "committee" (
 		"id" serial NOT NULL,
-		"name" text NOT NULL DEFAULT ''::text, -- Committee description
+		"name" text DEFAULT ''::text, -- Committee description
 		"description" text NOT NULL DEFAULT ''::text,
+		"text_search_data" tsvector,
 		CONSTRAINT committe_pkey PRIMARY KEY (id));
 COMMENT ON TABLE committee
   IS 'Committees formed to do research and make recommendations on a potential or planned project or change. ';
