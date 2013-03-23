@@ -121,6 +121,7 @@ CREATE TABLE "member" (
         "phone"                 TEXT,
         "mobile_phone"          TEXT,
         "profession"            TEXT,
+	"elected"		BOOLEAN,
         "external_memberships"  TEXT,
         "external_posts"        TEXT,
         "formatting_engine"     TEXT,
@@ -166,6 +167,7 @@ COMMENT ON COLUMN "member"."authentication"       IS 'Information about how this
 COMMENT ON COLUMN "member"."organizational_unit"  IS 'Branch or division of the organization the member belongs to';
 COMMENT ON COLUMN "member"."internal_posts"       IS 'Posts (offices) of the member inside the organization';
 COMMENT ON COLUMN "member"."realname"             IS 'Real name of the member, may be identical with "name"';
+COMMENT ON COLUMN "member"."elected"              IS 'Member was selected by vote for an office';
 COMMENT ON COLUMN "member"."email"                IS 'Published email address of the member; not used for system notifications';
 COMMENT ON COLUMN "member"."external_memberships" IS 'Other organizations the member is involved in';
 COMMENT ON COLUMN "member"."external_posts"       IS 'Posts (offices) outside the organization';
@@ -1171,6 +1173,15 @@ CREATE UNIQUE INDEX "notification_sent_singleton_idx" ON "notification_sent" ((1
 
 COMMENT ON TABLE "notification_sent" IS 'This table stores one row with the last event_id, for which notifications have been sent out';
 COMMENT ON INDEX "notification_sent_singleton_idx" IS 'This index ensures that "notification_sent" only contains one row maximum.';
+
+CREATE TABLE "committee" (
+		"id" serial NOT NULL,
+		"name" text NOT NULL DEFAULT ''::text, -- Committee description
+		"description" text NOT NULL DEFAULT ''::text,
+		CONSTRAINT committe_pkey PRIMARY KEY (id));
+COMMENT ON TABLE committee
+  IS 'Committees formed to do research and make recommendations on a potential or planned project or change. ';
+COMMENT ON COLUMN committee.name IS 'Committee description';
 
 
 
@@ -4482,7 +4493,5 @@ CREATE FUNCTION "delete_private_data"()
   $$;
 
 COMMENT ON FUNCTION "delete_private_data"() IS 'Used by lf_export script. DO NOT USE on productive database, but only on a copy! This function deletes all data which should not be publicly available, and can be used to create a database dump for publication. See source code to see which data is deleted. If you need a different behaviour, copy this function and modify lf_export accordingly, to avoid data-leaks after updating.';
-
-
 
 COMMIT;
